@@ -1,11 +1,11 @@
 var jwt = require('jsonwebtoken');
 
-module.exports = function (req, res) {
+module.exports = function (req, res, next) {
 
 	// Campos incorrectos
 	if(!req.body || !req.body.name || req.body.name == '' ||  !req.body.password || req.body.password == ''){
 		res.send(JSON.stringify({err: "Campos Vacios"}));
-		return;
+		next();
 	}
 
 	//Comprovamos el usuario
@@ -17,16 +17,16 @@ module.exports = function (req, res) {
 
 		//Si no encuentra el usuario
 		if(!user) {
-			res.send(JSON.stringify({err: "Campos Incorrectos"}));
-			return;
+			res.status(404).send("Campos Incorrectos");
+			next();
 		}
 
 		//Comparamos la contraseña
 		var serializePassword = require(__root + 'middleware/SerializePassword');
 		
 		if(user.password != serializePassword(req.body.password)) {
-			res.send(JSON.stringify({err: "Contraseña Incorrecta"}));
-			return;
+			res.status(404).send("Contraseña Incorrecta");
+			next();
 		}
 
 		//Si es correcto
@@ -41,7 +41,7 @@ module.exports = function (req, res) {
 		}, tokenConfig.secret, { expiresIn: tokenConfig.expired });
 
 		//Eviamos el token con el id del usuario
-		res.send(token);
+		res.status(200).send(token);
 		
 	});
 

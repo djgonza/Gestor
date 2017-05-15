@@ -2,12 +2,11 @@ module.exports = function (req, res, next) {
 
 	var documentModel = require(__root + 'models/document');
 
-	documentModel.findById(req.body.id, (err, doc) => {
+	documentModel.findById(req.params.id, (err, doc) => {
 		
 		if (err) return res.status(500).send(err);
 
-		if(req.body.id) doc.name = req.body.id;
-		if(req.body.type) doc.type = req.body.type;
+		if(req.body.name) doc.name = req.body.name;
 
 		doc.save((err, updateDoc) => {
 

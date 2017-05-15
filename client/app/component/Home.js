@@ -1,26 +1,22 @@
 import React from 'react';
-import NavBar from './NavBar';
-import SideBar from './SideBar';
-import Document from './Document';
+import Immutable from 'immutable';
+import SideBar from './Sidebar/SideBar';
+import Wrapper from './Wrapper/Wrapper';
 
 export default class Home extends React.Component {
 	
 	constructor(props) {
 		super(props);
-		this.state = {
-			user: global.user
-		}
 	}
 
 	render () {
 
-		return <div>
+		return (<div className="row">
 
-			<NavBar></NavBar>
 			<SideBar></SideBar>
-			<Document></Document>
+			<Wrapper></Wrapper>
 
-		</div>;
+		</div>)
 
 	}
 

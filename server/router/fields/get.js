@@ -2,13 +2,13 @@ module.exports = function (req, res, next) {
 
 	var documentModel = require(__root + 'models/document');
 
-	documentModel.find({
-		user: req.user.id
-	}, 'name fields', (err, documents) => {
-		
+	documentModel.findOne({
+		_id: req.params.id
+	}, 'fields', (err, fields) => {
+
 		if(err) return res.status(500).send(err)
 
-		res.status(200).send(documents);
+		res.status(200).send(fields);
 		
 	});
 	

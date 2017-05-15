@@ -22,9 +22,9 @@ function isLoged (ctx, next) {
 			token: localStorage.getItem('token')
 		}
 	})
-	.done(function(res) {
+	.done((res, status, xhr) => {
 		//Token espirado
-		if(res.status != 200) {
+		if(xhr.status != 200) {
 			Page.redirect('/login');
 			return;
 		}

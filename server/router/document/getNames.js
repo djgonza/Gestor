@@ -4,7 +4,7 @@ module.exports = function (req, res, next) {
 
 	documentModel.find({
 		user: req.user.id
-	}, 'name fields', (err, documents) => {
+	}, 'name', (err, documents) => {
 		
 		if(err) return res.status(500).send(err)
 

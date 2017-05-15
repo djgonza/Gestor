@@ -2,7 +2,7 @@ module.exports = function (req, res, next) {
 
 	var documentModel = require(__root + 'models/document');
 
-	documentModel.findByIdAndRemove(req.body.id, (err) => {
+	documentModel.findByIdAndRemove(req.params.id, (err) => {
 		
 		if (err) return res.status(500).send(err);
 
