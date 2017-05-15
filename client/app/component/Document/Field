@@ -1,0 +1,114 @@
+import React from 'react';
+
+export default class Field extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			x: 0,
+			y: 0,
+			height: 200,
+			width: 300,
+			zIndex: 0,
+			name: '',
+			id: this.props.id,
+			documentId: this.props.documentId,
+			element: {type: 'select', options: [
+				{
+					name: 'Uno',
+					value: 1
+				},
+				{
+					name: 'Dos',
+					value: 2
+				},
+				{
+					name: 'Tres',
+					value: 3
+				},
+				{
+					name: 'Cuatro',
+					value: 4
+				}
+			]},
+			value: '',
+			edit: false
+		}
+		this.handleChange = this.handleChange.bind(this);
+		this.changeEdit = this.changeEdit.bind(this);
+	}
+
+	getValue () {
+		return this.state.value;
+	}
+
+	changeEdit (status) {
+		this.setState({
+			edit: status
+		});
+	}
+
+	move (e){
+		e.preventDefault();
+		e.stopPropagation();
+		console.log('move', e.target);
+	}
+
+	componentWillReceiveProps (nextProps) {
+
+	}
+
+	componentDidMount () {
+
+		//Iniciamos si es un select
+		if(this.state.element.type == 'select'){
+			$(this.input).on('change', this.handleChange).material_select();
+		}
+
+	}
+
+	handleChange (e) {
+		console.log('e', e.target);
+		this.setState({[e.target.name]: e.target.value});
+	}
+
+	render () {
+
+		var input = null;
+
+		switch (this.state.element.type) {
+			case 'number': {
+				input = <input name="value" ref={(input) => {this.input = input}} onChange={this.handleChange} value={this.state.value} type="number" />;
+			}
+			break;
+			case 'text': {
+				input = <input name="value" ref={(input) => {this.input = input}} onChange={this.handleChange} value={this.state.value} type="text" />;
+			}
+			break;
+			case 'select': {
+				input = <select name="value" ref={(input) => {this.input = input}} value={this.state.value}>
+							{
+								this.state.element.options.map((option) => {
+									<option value={option.value}>{option.name}</option>
+								})
+							}
+						</select>
+			}
+			break;
+		}
+
+		return (<div 
+			onMouseDown={() => {this.changeEdit(true)}} 
+			onMouseUp={() => {this.changeEdit(false)}}
+			onMouseMove={(e) => {if(this.state.edit){ this.move(e)}}}
+			ref={(element) => {this.element = element}}
+			style={{height: this.state.height, width: this.state.width}}
+			className="card blue-grey darken-1">
+				<div className="card-content white-text">
+					<span className="card-title">{this.state.name}</span>
+					{input}
+				</div>
+			</div>);
+	}
+
+}
