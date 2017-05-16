@@ -48,7 +48,7 @@ export default class Register extends React.Component {
 	}
 
 	render () {
-		return <div className="row">
+		return <div className="row container">
 
 			<div className="col s12 m6">
 

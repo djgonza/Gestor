@@ -14,11 +14,14 @@ export default class DocumentList extends React.Component {
 		}
 
 		this.clickElement = this.clickElement.bind(this);
+		this.addDocument = this.addDocument.bind(this);
 
 	}
 
 	addDocument (document) {
-		//TODO
+		this.setState({
+			documents: this.state.documents.push(document);
+		});
 	}
 
 	removeDocument (id) {
@@ -70,35 +73,65 @@ export default class DocumentList extends React.Component {
 			
 		});
 
+		/* Dropdown */
+		$(this.dropdownDocumentList).dropdown({
+			inDuration: 300,
+			outDuration: 225,
+			constrainWidth: false, 
+			hover: false, 
+			gutter: 0, 
+			belowOrigin: false, 
+			alignment: 'left',
+			stopPropagation: true 
+		});
+
 	}
 
 	render () {
 
-		return (<ul className="collection" style={{'margin': '0'}}>
+		return (<div>
+			<a ref={(dropdownDocumentList) => {this.dropdownDocumentList = dropdownDocumentList}} 
+			className='dropdown-button btn' 
+			data-activates='dropdownDocumentList'>
+				Documentos
+			</a>
+			<ul id='dropdownDocumentList' className='dropdown-content'>
+				<li>
+					<a onClick={() => {this.setState({create: true})}}>
+						<i className="material-icons">create_new_folder</i>
+						Documento
+					</a>
+				</li>
+			</ul>
+			<ul className="collection" style={{'margin': '0'}}>
 			{
 				this.state.documents.map((document, key) => {
 					return <li 
-						key={key} 
-						id={key} 
-						onClick={this.clickElement} 
-						className={
-							this.state.active == key ?
-								"collection-item active light-blue darken-4" 
-								: 
-								"collection-item"
-							}
-						>
-							{document.name}
-						</li>
+					key={key} 
+					id={key} 
+					onClick={this.clickElement} 
+					className={
+						this.state.active == key ?
+						"collection-item active light-blue darken-4" 
+						: 
+						"collection-item"
+					}
+					>
+					{document.name}
+					</li>
 				})
 			}
-			</ul>);
+			</ul>
+			{
+				this.state.create ? <CreateDocument close={() => {this.setState({create: false})}} add={(document) => {this.addDocument(document)}}></CreateDocument> : null
+			}
+			</div>);
 
 	}
 
 }
 
-class ModalDocument extends React.Component {
+class CreateDocument extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -129,11 +162,31 @@ class ModalDocument extends React.Component {
 		let self = this;
 
 		if(!self.validate()){
+			//MSG error!
 			return false;
 		}
 
-		self.props.action (this.state);
-		self.close();
+		$.ajax({
+			method: "POST",
+			url: "http://localhost:5000/documents",
+			headers: {
+				token: localStorage.getItem('token')
+			},
+			data: this.state
+		})
+		.done((res, status, xhr) => {
+
+			if(xhr.status != 200) {
+				console.log('err documents');
+			}
+
+			self.props.add ({name: res.name, _id: res._id});
+			self.close();
+
+		})
+		.fail(function(xhr, status, error) {
+			
+		});
 
 	}
 
@@ -171,16 +224,16 @@ class ModalDocument extends React.Component {
 
 		return (<div ref={(modal) => {this.modal = modal}} className="modal">
 			<div className="modal-content">
-				<div className="input-field col s12">
-					<input type="text" name="name" className="validate" onChange={this.handleChange} value={this.state.name} />
-					<label>Nombre</label>
-				</div>
+			<div className="input-field col s12">
+			<input type="text" name="name" className="validate" onChange={this.handleChange} value={this.state.name} />
+			<label>Nombre</label>
+			</div>
 			</div>
 			<div className="modal-footer">
-				<a onClick={this.close} className="modal-action waves-effect waves-green btn-flat red">Cerrar</a>
-				<a onClick={this.save} className="modal-action waves-effect waves-green btn-flat green">Guardar</a>
+			<a onClick={this.close} className="modal-action waves-effect waves-green btn-flat red">Cerrar</a>
+			<a onClick={this.save} className="modal-action waves-effect waves-green btn-flat green">Guardar</a>
 			</div>
-		</div>);
+			</div>);
 
 	}
 }
