@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-module.exports = mongoose.model('Document', new Schema({
+module.exports = mongoose.model('Library', new Schema({
 
 	user: {
 		type: String,
@@ -15,8 +15,9 @@ module.exports = mongoose.model('Document', new Schema({
 		type: Date, 
 		default: Date.now,
 	},
-	fields: {
-		type: Array
+	books: {
+		type: Array,
+		default: []
 	}
 
 }));

@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 
 //Db
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/users');
+mongoose.connect('mongodb://localhost/gestor');
 
 //global routes
 global.__root = __dirname + '/';

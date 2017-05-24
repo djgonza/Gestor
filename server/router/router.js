@@ -19,14 +19,18 @@ router.get('/validateToken', (req, res, next) => {
 
 	var tokenConfig = require(__root + 'tokenConfig');
 
+	console.log('--> Validate Token...');
+
 	//Comprobamos que existe el token
 	if (req.headers.token){
 		jwt.verify(req.headers.token, tokenConfig.secret, (err, decoded) => {
 			if(err){
+				console.log('--> Token Expirado (409)');
 				res.status(409).send("Token expirado!");
-				next();
+				return;
 			}
 
+			console.log('--> Token Correcto! (200)');
 			res.status(200).send('ok');
 			
 		});

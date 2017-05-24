@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-module.exports = mongoose.model('User', new Schema({
+let schema = new Schema({
 
 	name: {
 		type: String,
@@ -28,4 +28,15 @@ module.exports = mongoose.model('User', new Schema({
 		default: 'user'
 	}
 
-}));
+}, {emitIndexErrors: true})
+
+schema.post('save', (err, doc, next) => {
+	
+	if(err.name === 'ValidationError'){
+		next(new Error('Validacion Fallida'));
+		return;
+	}
+	next(err);
+});
+
+module.exports = mongoose.model('User', schema);

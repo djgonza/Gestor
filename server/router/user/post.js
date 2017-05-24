@@ -1,25 +1,29 @@
 module.exports = function (req, res, next) {
 
-	//Parseamos los datos del form
-	var dataForm = {
-		name: req.body.username,
-		secondName: req.body.secondName,
-		password: req.body.password,
-		email: req.body.email
-	}
-
 	//Creamos el usuario
-	var userModel = require(__root + 'models/user');
+	let userModel = require(__root + 'models/user');
+	
+	userModel.findOne({ 'name': req.body.name }, '', (err, user) => {
 
-	userModel.create(req.body, (err) => {
-
-		if(err) {
-			console.log(err);
-			res.sendStatus(409);
+		if(user) {
+			console.log('--> Creacion de usuario fallida: Usuario duplicado', err);
+			res.status(401).send('Campos Incorrectos!');
 			return;
 		}
 
-		res.sendStatus(200);
+		userModel.create(req.body).then(user => {
+
+			console.log('--> Usuario Creado! ', user);
+			res.sendStatus(200);
+			return;
+
+		}).catch(err => {
+
+			console.log('--> Creacion de usuario fallida', err);
+			res.status(401).send('Campos Incorrectos!');
+			return;
+
+		});
 
 	});
 
