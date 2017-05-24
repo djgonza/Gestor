@@ -5,8 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js & gulp compile",
-    "transpile": "gulp compile"
+    "start": "gulp compile & node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -25,6 +24,8 @@
     "immutable": "^3.8.1",
     "page": "^1.7.1",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-redux": "^5.0.5",
+    "redux": "^3.6.0"
   }
 }

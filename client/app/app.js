@@ -1,6 +1,8 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom';
-import Router from './component/Router';
+import Router from './components/Router';
+import GlobalStore from './GlobalStore';
 
 class App extends React.Component {
 	
@@ -25,6 +27,9 @@ class App extends React.Component {
 
 
 ReactDOM.render(
-	<App></App>,
+	<Provider store={GlobalStore}>
+		<App />	
+	</Provider>,
 	document.getElementById('app')
 	);
+	
