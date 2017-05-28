@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
+import ContextMenu from './ContextMenu';
 import SelectBook from './../Actions/Select/SelectBook';
-import ClearSelectedBook from './../Actions/Select/ClearSelectedBook';
-import RemoveBook from './../Actions/Remove/RemoveBook';
 
 class Book extends React.Component {
 	
@@ -11,76 +10,107 @@ class Book extends React.Component {
 		super(props);
 
 		this.state = {
-			contextMenu: false,
-			events: Immutable.List()
+			showContextMenu: false
 		}
 
 		this.selectBook = this.selectBook.bind(this);
+		this.removeBook = this.removeBook.bind(this);
+		this.editBook = this.editBook.bind(this);
 		this.contextMenu = this.contextMenu.bind(this);
+		this.click = this.click.bind(this);
+		this.setContextMenu = this.setContextMenu.bind(this);
 
-	}
-
-	componentDidMount() {
-		let eventContextMenu = e => {
-			this.contextMenu(e);
-		}
-		let eventClick = e => {
-			this.contextMenu (e);
-			this.selectBook (e);
-		}
-		window.addEventListener('contextmenu', eventContextMenu, false);
-		window.addEventListener('click', eventClick, false);
-
-		this.setState({
-			events: this.state.events.insert(
-				{
-					type: 'contextmenu',
-					func: eventContextMenu
-				},{
-					type: 'click',
-					func: eventClick
-				})
-		});
-
-	}
-
-	selectBook (e) {
-
-		if(this.element === e.target){
-			e.preventDefault();
-			SelectBook (this.props.id);
-		}
-	}
-
-	componentWillUnmount() {
-		//Destroy Events
-		this.state.events.map(event => {
-			window.removeEventListener(event.type, event.func, false);
-		});
-		ClearSelectedBook();
 	}
 
 	contextMenu (e) {
 
-		if(this.element != e.target){
+		if(this.element !== e.target){
+			this.setContextMenu(false);
+			return;
+		}
+
+		e.preventDefault();
+		let x = (e.pageX - $(e.target).offset().left);
+		let y = (e.pageY );
+
+		this.selectBook(e);
+		this.setContextMenu(true, x, y);
+
+	}
+
+	click (e) {
+		
+		this.setContextMenu(false);
+
+		if(this.element !== e.target){
+			return;
+		}
+
+		this.selectBook(e);
+
+	}
+
+	setContextMenu (status, x, y) {
+		
+		if(status){
 			this.setState({
-				contextMenu: false
+				showContextMenu: {x, y}
 			});
 			return;
 		}
 
-		if(e.type === 'contextmenu'){
-			console.log(e);
-			e.preventDefault();
-			this.selectBook(e);
-			this.setState({
-				contextMenu: {
-					offsetX: e.offsetX,
-					offsetY: e.offsetY
-				}
-			});
-			return;
-		}
+		this.setState({
+			showContextMenu: false
+		});
+		
+
+	}
+
+	componentDidMount() {
+		window.addEventListener('contextmenu', this.contextMenu);
+		window.addEventListener('click', this.click);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('contextmenu', this.contextMenu);
+		window.removeEventListener('click', this.click);
+	}
+
+	//Selecciona un libro
+	selectBook (e) {
+		SelectBook (this.props.id);
+	}
+
+	editBook () {
+		this.props.editBook(this.props.id);
+	}
+
+	removeBook () {
+		this.props.removeBook(this.props.id);
+	}
+
+	mountContextMenu () {
+
+		if (!this.state.showContextMenu) return;
+
+		let contextMenu = this.state.showContextMenu;
+		let items = [];
+
+		items.push({
+			name: 'Editar',
+			click: this.editBook
+		});
+
+		items.push({
+			name: 'Borrar',
+			click: this.removeBook
+		});
+
+		return (<ContextMenu 
+			top={contextMenu.y} 
+			left={contextMenu.x} 
+			items={items} 
+		/>);
 
 	}
 
@@ -91,18 +121,18 @@ class Book extends React.Component {
 			classNames += ' active blue darken-1';
 		}
 		
-		return (<li ref={(element) => this.element = element} className={classNames}>
-			{this.props.name}
-			{
-				this.state.contextMenu ? <ContextMenu remove={() => {this.setState({contextMenu: false})}} offsetX={this.state.contextMenu.offsetX} offsetY={this.state.contextMenu.offsetY} {...this.props}/> : null
-			}
+		return (<li 
+			ref={(element) => this.element = element} 
+			className={classNames}>
+				{ this.mountContextMenu() }
+				{ this.props.name }
 		</li>);
 
 	}
 
 }
 
-
+//Inyecta el state global al las props del book
 const mapStateToProps = (state) => {
 	return {
 		selectedBook: state.selectedBook
@@ -110,80 +140,4 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps)(Book);
-
-
-class ContextMenu extends React.Component {
-	
-	constructor(props) {
-		super(props);
-
-		this.style = {
-			position: 'fixed',
-			zIndex: 1000,
-			left: this.props.offsetX,
-			top: this.props.offsetY,
-			color: 'black'
-		}
-
-		//this.remove = this.remove.bind(this);
-		this.edit = this.edit.bind(this);
-
-	}
-
-	componentDidMount() {
-		this.removeBtn.addEventListener('click', e => {
-			this.remove (e);
-		}, false);
-		this.editBtn.addEventListener('click', e => {
-			this.edit (e);
-		}, false);
-	}
-
-	componentWillUnmount() {
-		this.removeBtn.removeEventListener('click', e => {
-			this.remove (e);
-		}, false);
-		this.editBtn.removeEventListener('click', e => {
-			this.edit (e);
-		}, false);
-	}
-
-	componentWillReceiveProps(nextProps) {
-		this.style.left = this.props.offsetX;
-		this.style.top = this.props.offsetY;
-	}
-
-	remove (e) {
-		if(e.target === this.removeBtn){
-			e.stopPropagation();
-			console.log('remove', this.props.id);
-			if(confirm(`¿Desea eliminar el libro ${this.props.name}?`)){
-				this.props.remove();
-				RemoveBook(this.props.id);
-			}
-		}
-	}
-
-	edit (e) {
-		if(e.target === this.editBtn){
-			e.stopPropagation();
-			console.log('edit', this.props.id);
-		}
-	}
-
-	render () {
-		
-		return(<ul className="collection" style={this.style}>
-			<li ref={removeBtn => this.removeBtn = removeBtn} className='collection-item'>Eliminar</li>
-			<li ref={editBtn => this.editBtn = editBtn} className='collection-item'>Editar</li>
-		</ul>);
-
-	}
-}
-
-
-
-
-
-
 

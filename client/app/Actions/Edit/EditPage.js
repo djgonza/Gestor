@@ -1,10 +1,10 @@
 import GlobalStore from './../../GlobalStore';
 
-const EditPage = (page, pageIndex, bookIndex) => {
+const EditPage = (newPage, pageIndex, bookIndex) => {
 	GlobalStore.dispatch({
 		type: 'EDIT_PAGE',
 		data: {
-			page: page,
+			newPage: newPage,
 			pageIndex: pageIndex,
 			bookIndex: bookIndex
 		}

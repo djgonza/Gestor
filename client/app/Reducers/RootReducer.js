@@ -19,7 +19,7 @@ const RootReducer = combineReducers({
 			case 'CREATE_BOOK':
 			case 'CREATE_FIELD':
 			case 'CREATE_PAGE':
-				return Create (books, action);
+				return Create (books, action).splice(0, -1);
 			break;
 
 			case 'EDIT_BOOK':
@@ -54,7 +54,7 @@ const RootReducer = combineReducers({
 			return SelectField (selectedField = null, action);
 		}
 		if(action.type === 'CLEAR_SELECTED_FIELD') {
-			return ClearSelectedField (selectedFIELD = null, action);
+			return ClearSelectedField (selectedField = null, action);
 		}
 		return selectedField;
 	},
@@ -66,6 +66,12 @@ const RootReducer = combineReducers({
 			return ClearSelectedPage (selectedPage = null, action);
 		}
 		return selectedPage;
+	},
+	control: (status = true, action) => {
+		if(action.type === 'UPDATE_STATE'){
+			return new Boolean(true);
+		}
+		return status;
 	}
 
 });

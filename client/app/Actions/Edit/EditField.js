@@ -1,10 +1,10 @@
 import GlobalStore from './../../GlobalStore';
 
-const EditField = (field, fieldIndex, bookIndex) => {
+const EditField = (newField, fieldIndex, bookIndex) => {
 	GlobalStore.dispatch({
 		type: 'EDIT_FIELD',
 		data: {
-			field: field,
+			newField: newField,
 			fieldIndex: fieldIndex,
 			bookIndex: bookIndex
 		}

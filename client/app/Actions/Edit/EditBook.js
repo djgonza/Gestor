@@ -1,10 +1,10 @@
 import GlobalStore from './../../GlobalStore';
 
-const EditBook = (book, bookIndex) => {
+const EditBook = (newBook, bookIndex) => {
 	GlobalStore.dispatch({
 		type: 'EDIT_BOOK',
 		data: {
-			book: book,
+			newBook: newBook,
 			bookIndex: bookIndex
 		}
 	});
