@@ -8,19 +8,14 @@
     "start": "gulp watch & node server.js",
     "compile": "gulp jsx"
   },
-  "author": "David Jimenez Gonza",
+  "author": "David Jimenez Gonzalez",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.1",
     "cors": "^2.8.3",
     "express": "^4.15.2",
     "jsonwebtoken": "^7.4.0",
-    "materialize": "^1.0.0",
-    "mongoose": "^4.9.4",
-    "multer": "^1.3.0",
-    "page": "^1.7.1",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "mongoose": "^4.9.4"
   },
   "devDependencies": {
     "babel-preset-react": "^6.24.1",
