@@ -139,11 +139,11 @@ class FieldList extends React.Component {
 		return (<div className="row">
 			{ this.state.editField ? this.mountModalEditField() : null }
 			{ this.state.createField ? this.mountModalCreateField() : null }
-			<a onClick={() => {this.setState({createField: true})}} className="waves-effect waves-light btn col s12">
+			<a onClick={() => {this.setState({createField: true})}} className="btn btn-primary col-12">
 				<i className="material-icons right">note_add</i>
 				Campos
 			</a>
-			<ul className="collection">
+			<ul className="list-group col-12">
 				{ this.mountAllFields() }
 			</ul>
 		</div>);

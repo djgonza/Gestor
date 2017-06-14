@@ -7,13 +7,16 @@ export default class Login extends React.Component {
 		super(props);
 		this.state = {
 			name: '',
-			password: ''
+			password: '',
+			msg: false
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.login = this.login.bind(this);
 	}
 
 	login () {
+
+		let self = this;
 
 		$.ajax({
 			method: "POST",
@@ -26,6 +29,9 @@ export default class Login extends React.Component {
 		})
 		.fail(function(xhr, status, error) {
 			console.log('fail', xhr, status, error);
+			self.setState({
+				msg: true
+			});
 		});
 
 	}
@@ -36,32 +42,40 @@ export default class Login extends React.Component {
 
 	render () {
 
-		return <div>
+		let styles = {
+			width: '50%',
+    		marginLeft: '25%',
+    		marginTop: '2%'
+		}
 
-		<h1>Login</h1>
+		return <div className="card" style={styles}>
 
-		<div className="row">
+			<div className="card-header">
+				Login
+			</div>
 
-		<div className="input-field col s12">
-		<i className="material-icons prefix">account_circle</i>
-		<input type="text" className="validate" name="name" value={this.state.name} onChange={this.handleChange} />
-		<label>Nombre</label>
-		</div>
+			<div className="card-block">
 
-		<div className="input-field col s12">
-		<i className="material-icons prefix">lock_open</i>
-		<input type="text" className="validate" name="password" value={this.state.password} onChange={this.handleChange} />
-		<label>Contraseña</label>
-		</div>
+				{
+					this.state.msg ? <div className="alert alert-warning">Nombre o Contraseña incorrecto!</div> : null
+				}
 
-		<button className="btn waves-effect waves-light col s6 offset-s6" onClick={this.login}>Acceder</button>
+				<div className="form-group">
+					<label>Nombre</label>
+					<input type="text" className="form-control" name="name" value={this.state.name} onChange={this.handleChange} />
+				</div>
 
-		</div>
-		<div className="row">
+				<div className="form-group">
+					<label>Contraseña</label>
+					<input type="text" className="form-control" name="password" value={this.state.password} onChange={this.handleChange} />
+				</div>
 
-		<a className="btn waves-effect waves-light col s6 offset-s6" href="/register">Registrar</a>
+				<div className="btn-group d-flex justify-content-end">
+					<button className="btn btn-primary" onClick={this.login}>Acceder</button>
+					<a className="btn btn-primary" href="/register">Registrar</a>
+				</div>
 
-		</div>
+			</div>
 
 		</div>;
 

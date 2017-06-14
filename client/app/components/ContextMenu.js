@@ -15,7 +15,7 @@ export default class ContextMenu extends React.Component {
 				onClick={e => {
 					item.click(e)
 				}} 
-				className='collection-item'>
+				className='list-group-item list-group-item-action'>
 					{item.name}
 				</li>);
 
@@ -33,7 +33,7 @@ export default class ContextMenu extends React.Component {
     		zIndex: '10000'
 		}
 
-		return (<ul className="collection" style={styles}>
+		return (<ul className="list-group" style={styles}>
 			{ this.mountList (this.props.items) }
 		</ul>);
 

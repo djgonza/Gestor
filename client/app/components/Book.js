@@ -116,7 +116,7 @@ class Book extends React.Component {
 
 	render () {
 
-		let classNames = 'collection-item';
+		let classNames = 'list-group-item list-group-item-action';
 		if(this.props.selectedBook && this.props.selectedBook.bookIndex == this.props.id) {
 			classNames += ' active blue darken-1';
 		}

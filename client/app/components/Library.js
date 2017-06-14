@@ -12,11 +12,11 @@ class Library extends React.Component {
 	render () {
 
 		return (<div className="row">
-			<div className="col s3">
+			<div className="col-3">
 				<BookList />
 				<FieldList />
 			</div>
-			<div className="col s9">
+			<div className="col-9">
 				
 			</div>
 		</div>)

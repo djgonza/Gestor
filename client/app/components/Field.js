@@ -114,7 +114,7 @@ class Field extends React.Component {
 
 	render () {
 
-		let classNames = 'collection-item';
+		let classNames = 'list-group-item list-group-item-action';
 		if(this.props.selectedField && this.props.selectedField.fieldIndex == this.props.id) {
 			classNames += ' active';
 		}

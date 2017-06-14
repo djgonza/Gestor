@@ -34,8 +34,8 @@ function compile (bundle) {
 	.transform("babelify", {presets: ["es2015", "react"]})
 	.bundle()
 	.on('error', gutil.log)
-	.on('end', () => {console.timeEnd('Compilado!');})
 	.pipe(source('app.js'))
-	.pipe(gulp.dest('./public/'));
+	.pipe(gulp.dest('./public/'))
+	.on('end', () => { console.timeEnd('Compilado!') });
 
 }
